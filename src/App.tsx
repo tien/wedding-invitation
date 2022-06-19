@@ -1,16 +1,55 @@
 /** @jsx jsx */
-import React from "react";
+import React, { useState } from "react";
 import { css, Global, jsx } from "@emotion/react";
 import { format, formatISO, formatRelative, parseISO } from "date-fns";
 import cardBackground from "./assets/card-background.png";
 import Fireflies from "./components/Fireflies";
 import background from "./assets/background.webp";
 import weddingCalendar from "./assets/wedding.ics";
+import { animated, useSpring } from "react-spring";
+import { useGesture, useHover, useMove } from "@use-gesture/react";
 
 const ceremonyDate = parseISO("2022-12-19");
 const receptionDate = parseISO("2022-12-22");
 
 function App() {
+  const [cardStyle, api] = useSpring(() => ({
+    transform: `perspective(0px) scale3d(0.8,0.8,0.8) rotateX(0deg) rotateY(0deg)`,
+  }));
+
+  const cardBind = useGesture({
+    onHover: (event) => {
+      const rect = (
+        event.currentTarget as EventTarget & HTMLElement
+      ).getBoundingClientRect();
+
+      if (!event.hovering) {
+        api.start({
+          transform: `perspective(${rect.width}px) scale3d(0.8,0.8,0.8) rotateX(0deg) rotateY(0deg)`,
+        });
+      }
+    },
+    onMove: (event) => {
+      const threshold = 5;
+      const {
+        currentTarget,
+        xy: [x, y],
+      } = event;
+      const rect = (
+        currentTarget as EventTarget & HTMLElement
+      ).getBoundingClientRect();
+
+      const horizontal = (x - rect.left) / rect.width;
+      const vertical = (y - rect.top) / rect.height;
+      const rotateX = threshold / 2 - horizontal * threshold;
+      const rotateY = vertical * threshold - threshold / 2;
+
+      api.start({
+        transform: `perspective(${rect.width}px) scale3d(0.85,0.85,0.85) rotateX(${rotateY}deg) rotateY(${rotateX}deg)`,
+      });
+    },
+  });
+
   return (
     <>
       <Global
@@ -38,7 +77,8 @@ function App() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <main
+        <animated.main
+          {...cardBind()}
           onClick={() => {
             const anchor = document.createElement("a");
             anchor.href = weddingCalendar;
@@ -57,12 +97,9 @@ function App() {
             flexDirection: "column",
             transform: "scale(0.8)",
             position: "relative",
-            transition: "0.5s ease-in-out",
             cursor: "pointer",
-            ":hover": {
-              transform: "scale(0.85) translateY(-10px)",
-            },
           }}
+          style={cardStyle}
         >
           <div
             css={{
@@ -172,7 +209,7 @@ function App() {
               </p>
             </section>
           </div>
-        </main>
+        </animated.main>
       </div>
       <Fireflies />
     </>
