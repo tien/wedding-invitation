@@ -70,11 +70,11 @@ function App() {
           justifyContent: "center",
           alignItems: "center",
           position: "absolute",
+          overflow: "scroll",
           height: "100%",
           width: "100%",
           background: `linear-gradient(180deg,rgba(0,0,0,.2),#080808), url(${background})`,
           backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
         }}
       >
         <animated.main
