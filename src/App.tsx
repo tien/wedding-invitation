@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import React, { useState } from "react";
+import React from "react";
 import { css, Global, jsx } from "@emotion/react";
-import { format, formatISO, formatRelative, parseISO } from "date-fns";
-import cardBackground from "./assets/card-background.png";
-import Fireflies from "./components/Fireflies";
-import background from "./assets/background.webp";
-import weddingCalendar from "./assets/wedding.ics";
+import { useGesture } from "@use-gesture/react";
+import { format, formatISO, parseISO } from "date-fns";
 import { animated, useSpring } from "react-spring";
-import { useGesture, useHover, useMove } from "@use-gesture/react";
+import background from "./assets/background.jpeg";
+import cardBackground from "./assets/card-background.png";
+import weddingCalendar from "./assets/wedding.ics";
+import Fireflies from "./components/Fireflies";
 
 const ceremonyDate = parseISO("2022-12-19");
 const receptionDate = parseISO("2022-12-22");
@@ -72,7 +72,7 @@ function App() {
           position: "absolute",
           height: "100%",
           width: "100%",
-          background: `linear-gradient(180deg,rgba(0,0,0,.2),#080808), url(https://www-static.weddingbee.com/wp-content/uploads/2020/08/lights-603660.jpg)`,
+          background: `linear-gradient(180deg,rgba(0,0,0,.2),#080808), url(${background})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
